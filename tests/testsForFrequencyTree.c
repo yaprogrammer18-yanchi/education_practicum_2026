@@ -92,7 +92,7 @@ bool testFrequencyTreeSingleNode(void)
     return true;
 }
 
-bool TestFrequencyTreeSumFrequency(void)
+bool testFrequencyTreeSumFrequency(void)
 {
     MinHeap* heap = heapCreate(4);
     if (!heap) {
@@ -142,10 +142,10 @@ bool TestFrequencyTreeSumFrequency(void)
 
 int testsForFrequencyTree(void)
 {
-    bool okNull = TestFrequencyTreeNullHeap();
-    bool okEmpty = TestFrequencyTreeEmptyHeap();
-    bool okSingle = TestFrequencyTreeSingleNode();
-    bool okSum = TestFrequencyTreeSumFrequency();
+    bool okNull = testFrequencyTreeNullHeap();
+    bool okEmpty = testFrequencyTreeEmptyHeap();
+    bool okSingle = testFrequencyTreeSingleNode();
+    bool okSum = testFrequencyTreeSumFrequency();
 
     printf("TestFrequencyTreeNullHeap:   %s\n", okNull ? "PASS" : "FAIL");
     printf("TestFrequencyTreeEmptyHeap:  %s\n", okEmpty ? "PASS" : "FAIL");
