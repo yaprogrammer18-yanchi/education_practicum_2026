@@ -86,7 +86,7 @@ void treeFree(HuffmanTree* tree)
     free(tree);
 }
 
-bool IsEmpty(HuffmanTree* tree)
+bool isEmpty(HuffmanTree* tree)
 {
     return tree->root;
 }
