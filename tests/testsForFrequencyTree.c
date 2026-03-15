@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-bool TestFrequencyTreeNullHeap(void)
+bool testFrequencyTreeNullHeap(void)
 {
     HuffmanTree* tree = frequencyTreeCreate(NULL);
     if (tree != NULL) {
@@ -17,7 +17,7 @@ bool TestFrequencyTreeNullHeap(void)
     return true;
 }
 
-bool TestFrequencyTreeEmptyHeap(void)
+bool testFrequencyTreeEmptyHeap(void)
 {
     MinHeap* heap = heapCreate(4);
     if (!heap) {
@@ -43,7 +43,7 @@ bool TestFrequencyTreeEmptyHeap(void)
     return true;
 }
 
-bool TestFrequencyTreeSingleNode(void)
+bool testFrequencyTreeSingleNode(void)
 {
     MinHeap* heap = heapCreate(1);
     if (!heap) {
