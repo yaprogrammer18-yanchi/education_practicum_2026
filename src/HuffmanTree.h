@@ -11,7 +11,7 @@ bool treeMerge(HuffmanTree* tree1, HuffmanTree* tree2);
 HuffNode* nodeCreate(unsigned char symbol, unsigned long freq);
 unsigned char getSymbol(HuffNode* node);
 unsigned long getFrequency(HuffNode* node);
-bool IsEmpty(HuffmanTree* tree);
+bool isEmpty(HuffmanTree* tree);
 HuffNode* getRoot(HuffmanTree* tree);
 HuffNode* getLeft(const HuffNode* node);
 HuffNode* getRight(const HuffNode* node);
