@@ -123,7 +123,7 @@ bool TestFrequencyTreeSumFrequency(void)
         return false;
     }
 
-    if (!IsEmpty(tree)) {
+    if (!isEmpty(tree)) {
         fprintf(stderr, "ERROR: root is NULL in non-empty tree\n");
         treeFree(tree);
         return false;
