@@ -15,3 +15,16 @@ bool isEmpty(HuffmanTree* tree);
 HuffNode* getRoot(HuffmanTree* tree);
 HuffNode* getLeft(const HuffNode* node);
 HuffNode* getRight(const HuffNode* node);
+void extendCodeLength(HuffNode* node);
+void increaseFrequency(HuffNode* node);
+
+// ---------- построение таблицы символ - длина кода ----------
+
+typedef struct Cell Cell;
+
+// функция обхода дерева и получения длины кода для символов
+// принимает на вход дерево и его размер
+// возвращает указатель на массив с указателями на ячейки
+Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols);
+unsigned char cellGetLength(Cell* cell);
+unsigned char cellGetSymbol(Cell* cell);
