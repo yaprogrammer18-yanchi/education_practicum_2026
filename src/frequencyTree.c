@@ -5,10 +5,11 @@
 #include <stdio.h>
 #include <string.h>
 
-// тут будет реализован алгоритм построения дерева частот с использованием библиотек
-// чтение файла будет реализовано в отдельном модуле
-// в этот файл передается очередь с нодами, а уже здесь строится дерево частот
-
+/*
+ * функция построения дерева частот
+ * на вход принимает минимальную кучу с элементами (символ - частота) в нужном порядке
+ * возвращает указатель на созданное дерево
+ */
 HuffmanTree* frequencyTreeCreate(MinHeap* heap)
 {
     if (heap == NULL) {
@@ -36,7 +37,6 @@ HuffmanTree* frequencyTreeCreate(MinHeap* heap)
         }
         addLeftAndRight(newRoot, node1, node2);
         if (!heapPush(heap, newRoot)) {
-            // ошибка при push
             return NULL;
         }
     }
