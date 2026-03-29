@@ -9,6 +9,9 @@ typedef struct MinHeap {
 
 static void swapNodes(HuffNode** a, HuffNode** b)
 {
+    if (a == NULL || b == NULL || *a == NULL || *b == NULL) {
+        return;
+    }
     HuffNode* tmp = *a;
     *a = *b;
     *b = tmp;
@@ -102,8 +105,9 @@ bool heapPush(MinHeap* heap, HuffNode* node)
             return false;
     }
     heap->data[heap->size] = node;
-    siftUp(heap, heap->size);
     heap->size++;
+    siftUp(heap, (heap->size - 1));
+
     return true;
 }
 
@@ -128,4 +132,17 @@ int heapEmpty(const MinHeap* heap)
 size_t heapSize(const MinHeap* heap)
 {
     return heap ? heap->size : 0;
+}
+
+HuffNode* alreadyInHeap(MinHeap* heap, unsigned char symbol)
+{
+    if (heap == NULL) {
+        return NULL;
+    }
+    for (size_t i = 0; i < heap->size; i++) {
+        if (getSymbol(heap->data[i]) == symbol) {
+            return heap->data[i];
+        }
+    }
+    return NULL;
 }
