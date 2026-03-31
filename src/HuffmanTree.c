@@ -204,20 +204,13 @@ int compareCells(const void* a, const void* b)
     if (a == NULL || b == NULL) {
         return 0;
     }
-
     const Cell* cellA = *(const Cell**)a;
     const Cell* cellB = *(const Cell**)b;
-
-    if (cellA->length < cellB->length) {
-        return -1;
-    } else if (cellA->length > cellB->length) {
-        return 1;
-    } else if ((cellA->length == cellB->length) && (cellA->symbol < cellB->symbol)) {
-        return 1;
-    } else if ((cellA->length == cellB->length) && (cellA->symbol < cellB->symbol)) {
-        return -1;
-    } else if ((cellA->length == cellB->length) && (cellA->symbol > cellB->symbol)) {
-        return 1;
+    if (cellA->length != cellB->length) {
+        return (cellA->length < cellB->length) ? -1 : 1;
+    }
+    if (cellA->symbol != cellB->symbol) {
+        return (cellA->symbol < cellB->symbol) ? -1 : 1;
     } else {
         return 0;
     }
