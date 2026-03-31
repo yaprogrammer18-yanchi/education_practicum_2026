@@ -124,7 +124,7 @@ HuffNode* getRight(const HuffNode* node)
     return node->right;
 }
 
-void increaseFrequency(HuffNode* node)
+void increaseFrequencyInNode(HuffNode* node)
 {
     if (node == NULL) {
         return;
@@ -136,7 +136,7 @@ void increaseFrequency(HuffNode* node)
 
 typedef struct Cell {
     unsigned char symbol;
-    uint8_t* codeBytes;
+    uint64_t code;
     unsigned char length;
 } Cell;
 
@@ -209,11 +209,11 @@ int compareCells(const void* a, const void* b)
     const Cell* cellB = *(const Cell**)b;
 
     if (cellA->length < cellB->length) {
-        return 1;
+        return -1;
     } else if (cellA->length > cellB->length) {
-        return -1;
+        return 1;
     } else if ((cellA->length == cellB->length) && (cellA->symbol < cellB->symbol)) {
-        return -1;
+        return 1;
     } else if ((cellA->length == cellB->length) && (cellA->symbol < cellB->symbol)) {
         return -1;
     } else if ((cellA->length == cellB->length) && (cellA->symbol > cellB->symbol)) {
@@ -239,4 +239,31 @@ Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols)
     }
     qsort(arrWithCells, quantityOfSymbols, sizeof(Cell*), compareCells);
     return arrWithCells;
+}
+
+// алгоритм построения канонических кодов:
+// первый сивол = 0 * длину кода
+// берем пред код + 1 добавляем нули справа до нужной длины
+// пока все не обойдем
+
+void generateCanonicalCodes(Cell** cells, size_t quantityOdCells)
+{
+    uint64_t buffer = 0;
+    size_t currentLength = 0;
+    size_t differrence = 0;
+    for (size_t i = 0; i < quantityOdCells; i++) {
+        differrence = cells[i]->length - currentLength;
+        buffer <<= differrence;
+        cells[i]->code = buffer;
+        currentLength = cells[i]->length;
+        buffer++;
+    }
+}
+
+uint64_t cellGetCode(Cell* cell)
+{
+    if (cell == NULL) {
+        return 0;
+    }
+    return cell->code;
 }

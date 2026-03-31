@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct HuffNode HuffNode;
 typedef struct HuffmanTree HuffmanTree;
@@ -16,7 +17,7 @@ HuffNode* getRoot(HuffmanTree* tree);
 HuffNode* getLeft(const HuffNode* node);
 HuffNode* getRight(const HuffNode* node);
 void extendCodeLength(HuffNode* node);
-void increaseFrequency(HuffNode* node);
+void increaseFrequencyInNode(HuffNode* node);
 
 // ---------- построение таблицы символ - длина кода ----------
 
@@ -28,3 +29,5 @@ typedef struct Cell Cell;
 Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols);
 unsigned char cellGetLength(Cell* cell);
 unsigned char cellGetSymbol(Cell* cell);
+void generateCanonicalCodes(Cell** cells, size_t quantityOdCells);
+uint64_t cellGetCode(Cell* cell);

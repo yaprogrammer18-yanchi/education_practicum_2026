@@ -36,7 +36,7 @@ size_t blockAnalyzer(char* data, size_t len, MinHeap* heap)
                 quantityOfSymbols++;
             }
         } else {
-            increaseFrequency(currentNode);
+            increaseFrequency(heap, currentNode);
         }
         index++;
     }
