@@ -119,6 +119,7 @@ HuffNode* heapPop(MinHeap* heap)
     heap->size--;
     if (heap->size > 0) {
         heap->data[0] = heap->data[heap->size];
+
         siftDown(heap, 0);
     }
     return min;
@@ -144,5 +145,21 @@ HuffNode* alreadyInHeap(MinHeap* heap, unsigned char symbol)
             return heap->data[i];
         }
     }
+
     return NULL;
+}
+
+void increaseFrequency(MinHeap* heap, HuffNode* node)
+{
+    if (heap == NULL || node == NULL) {
+        return;
+    }
+    increaseFrequencyInNode(node);
+    size_t i = 0;
+    for (; i < heap->size; i++) {
+        if (getSymbol(heap->data[i]) == getSymbol(node)) {
+            siftDown(heap, i);
+            break;
+        }
+    }
 }
