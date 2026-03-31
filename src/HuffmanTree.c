@@ -162,13 +162,13 @@ unsigned char cellGetLength(Cell* cell)
  * индекс массива, в который будут класться структуры ячеек
  * указатель на массив указателей на cells
  */
-void InorderRecursion(HuffNode* node, size_t* path, size_t* index, Cell** arrWithCells)
+void inorderRecursion(HuffNode* node, size_t* path, size_t* index, Cell** arrWithCells)
 {
     if (node == NULL) {
         return;
     }
     (*path)++;
-    InorderRecursion(node->left, path, index, arrWithCells);
+    inorderRecursion(node->left, path, index, arrWithCells);
     (*path)--;
 
     if (node != NULL && node->left == NULL && node->right == NULL) {
@@ -183,7 +183,7 @@ void InorderRecursion(HuffNode* node, size_t* path, size_t* index, Cell** arrWit
         return;
     }
     (*path)++;
-    InorderRecursion(node->right, path, index, arrWithCells);
+    inorderRecursion(node->right, path, index, arrWithCells);
     (*path)--;
     if (node != NULL && node->left == NULL && node->right == NULL) {
         Cell* newCell = calloc(1, sizeof(Cell));
@@ -226,7 +226,7 @@ Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols)
 
     Cell** arrWithCells = calloc(quantityOfSymbols, sizeof(Cell*));
     if (arrWithCells != NULL) {
-        InorderRecursion(tree->root, &path, &index, arrWithCells);
+        inorderRecursion(tree->root, &path, &index, arrWithCells);
     } else {
         return NULL;
     }
