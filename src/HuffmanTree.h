@@ -31,3 +31,7 @@ unsigned char cellGetLength(Cell* cell);
 unsigned char cellGetSymbol(Cell* cell);
 void generateCanonicalCodes(Cell** cells, size_t quantityOdCells);
 uint64_t cellGetCode(Cell* cell);
+void freeCellsArray(Cell** cells, size_t count);
+Cell* getCellFromArray(Cell** arr, char ch, size_t count);
+Cell* createCell(unsigned char symbol, uint64_t code, unsigned char length);
+Cell* getCellWithCode(Cell** arr, uint64_t code, size_t count);

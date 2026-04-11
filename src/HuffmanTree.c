@@ -140,6 +140,18 @@ typedef struct Cell {
     unsigned char length;
 } Cell;
 
+Cell* createCell(unsigned char symbol, uint64_t code, unsigned char length)
+{
+    Cell* cell = (Cell*)malloc(sizeof(Cell));
+    if (cell == NULL) {
+        return NULL;
+    }
+    cell->symbol = symbol;
+    cell->code = code;
+    cell->length = length;
+    return cell;
+}
+
 unsigned char cellGetSymbol(Cell* cell)
 {
     if (cell == NULL) {
@@ -259,4 +271,36 @@ uint64_t cellGetCode(Cell* cell)
         return 0;
     }
     return cell->code;
+}
+
+void freeCellsArray(Cell** cells, size_t count)
+{
+    if (!cells)
+        return;
+    for (size_t i = 0; i < count; i++) {
+        free(cells[i]);
+    }
+    free(cells);
+}
+
+Cell* getCellFromArray(Cell** arr, char ch, size_t count)
+{
+    // проверки
+    for (size_t i = 0; i < count; i++) {
+        if (cellGetSymbol(arr[i]) == ch) {
+            return arr[i];
+        }
+    }
+    return NULL;
+}
+
+Cell* getCellWithCode(Cell** arr, uint64_t code, size_t count)
+{
+    // проверки
+    for (size_t i = 0; i < count; i++) {
+        if (cellGetCode(arr[i]) == code) {
+            return arr[i];
+        }
+    }
+    return NULL;
 }
