@@ -6,23 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// вспомагательная функция для отладки
-void printBinary(uint64_t code)
-{
-    if (code == 0) {
-        printf("0");
-        return;
-    }
-    int started = 0;
-    for (int i = 63; i >= 0; i--) {
-        uint64_t bit = (code >> i) & 1;
-        if (bit || started) {
-            printf("%ld", bit);
-            started = 1;
-        }
-    }
-}
-
 // 1. размер таблицы - int то есть 4 байта
 // 2. Далее идут символ (1 байт) - его длина (1 байт) подряд
 // 3. начинаем цикл в котором последовательно заполняем буферные 8 бит и пишем в файл
@@ -131,4 +114,65 @@ void fileCompressAndWrite(char* inputFilepath, char* outputFilepath)
     heapFree(heap);
     treeFree(tree);
     freeCellsArray(cellArr, quantityOfSymbols);
+}
+
+void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
+{
+    FILE* inFile = fopen(compressedFilepath, "rb");
+    if (!inFile) {
+        printf("Cannot open compressed file\n");
+        return;
+    }
+    FILE* outFile = fopen(outputFile, "w");
+    if (!outFile) {
+        printf("Cannot open outputFile\n");
+        return;
+    }
+    // Читаем количество символов
+    uint32_t quantityOfSymbols;
+    if (fread(&quantityOfSymbols, sizeof(uint32_t), 1, inFile)) {
+    }
+
+    // Читаем таблицу символов и формируем массив указателей на ячейки таблицы
+    Cell** arrWithCells = calloc(quantityOfSymbols, sizeof(Cell*));
+    if (arrWithCells == NULL) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < quantityOfSymbols; i++) {
+        char symbol;
+        unsigned char length;
+        fread(&symbol, 1, 1, inFile);
+        fread(&length, 1, 1, inFile);
+        Cell* newCell = createCell(symbol, 0, length);
+        arrWithCells[i] = newCell;
+    }
+    generateCanonicalCodes(arrWithCells, quantityOfSymbols);
+    uint32_t encodedSize = 0;
+    fread(&encodedSize, sizeof(uint32_t), 1, inFile);
+
+    uint64_t bufferForSymbol = 0;
+    unsigned char usedBits = 0;
+    char byte = 0;
+    size_t bytesRead = 0;
+
+    while (bytesRead < encodedSize && fread(&byte, 1, 1, inFile) == 1) {
+        for (int i = 7; i >= 0; i--) {
+            int bit = (byte >> i) & 1;
+            bufferForSymbol = (bufferForSymbol << 1) | bit;
+            usedBits++;
+
+            Cell* cellWithCode = getCellWithCode(arrWithCells, bufferForSymbol, usedBits, quantityOfSymbols);
+            if (cellWithCode != NULL) {
+                char ch = cellGetSymbol(cellWithCode);
+                fwrite(&ch, sizeof(char), 1, outFile);
+                bufferForSymbol = 0;
+                usedBits = 0;
+            }
+        }
+        bytesRead++;
+    }
+    freeCellsArray(arrWithCells, quantityOfSymbols);
+    fclose(inFile);
+    fclose(outFile);
 }

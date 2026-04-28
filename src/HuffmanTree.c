@@ -294,11 +294,11 @@ Cell* getCellFromArray(Cell** arr, char ch, size_t count)
     return NULL;
 }
 
-Cell* getCellWithCode(Cell** arr, uint64_t code, size_t count)
+Cell* getCellWithCode(Cell** arr, uint64_t code, unsigned char length, size_t count)
 {
     // проверки
     for (size_t i = 0; i < count; i++) {
-        if (cellGetCode(arr[i]) == code) {
+        if (cellGetCode(arr[i]) == code && (length == cellGetLength(arr[i]))) {
             return arr[i];
         }
     }
