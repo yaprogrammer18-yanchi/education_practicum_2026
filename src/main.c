@@ -1,0 +1,52 @@
+#include "fileReader.h"
+#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void printUsage(const char* prog)
+{
+    fprintf(stderr, "Usage: %s [-c|-d] <input_file> <output_file>\n", prog);
+    fprintf(stderr, "  -c    Compress input file\n");
+    fprintf(stderr, "  -d    Decompress input file\n");
+    fprintf(stderr, "  -h    Show this help message\n");
+}
+
+int main(int argc, char* argv[])
+{
+    int opt;
+    char mode = 0;
+
+    while ((opt = getopt(argc, argv, "cdh")) != -1) {
+        switch (opt) {
+        case 'c':
+        case 'd':
+            mode = opt;
+            break;
+        case 'h':
+            printUsage(argv[0]);
+            return EXIT_SUCCESS;
+        default:
+            printUsage(argv[0]);
+            return EXIT_FAILURE;
+        }
+    }
+
+    if (!mode || argc - optind != 2) {
+        printUsage(argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    const char* input = argv[optind];
+    const char* output = argv[optind + 1];
+
+    if (mode == 'c') {
+        printf("Сжатие: %s -> %s\n", input, output);
+        fileCompressAndWrite((char*)input, (char*)output);
+    } else {
+        printf("Разжатие: %s -> %s\n", input, output);
+        fileDecompressAndWrite((char*)input, (char*)output);
+    }
+    printf("Выполнено.\n");
+    return EXIT_SUCCESS;
+}

@@ -1,0 +1,50 @@
+HUFFMAN ENCODING TEST FILE
+==========================
+
+In computer science and information theory, a Huffman code is a particular type of optimal
+prefix code that is commonly used for lossless data compression. The process of finding
+and/or using such a code proceeds by means of Huffman coding, an algorithm developed by
+David Huffman while he was a Ph.D. student at MIT, and published in the 1952 paper
+"A Method for the Construction of Minimum-Redundancy Codes".
+
+The output from Huffman's algorithm can be viewed as a variable-length code table
+for encoding a source symbol (such as a character in a file). The algorithm derives
+this table from the estimated probability or frequency of occurrence (weight)
+for each possible value of the source symbol. As in other entropy encoding methods,
+Huffman's method can be efficiently implemented, finding a code in time linear to the
+number of input weights if these weights are sorted.
+
+TECHNICAL CHALLENGE FOR YOUR HEAP:
+----------------------------------
+The following sequence contains many different characters to trigger heap resizing:
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789
+!@#$%^&*()_+-=[]{}|;':",./<>?~`
+
+Let's add some repetitive patterns to see compression efficiency:
+apple banana cherry apple banana cherry apple banana cherry
+apple banana cherry apple banana cherry apple banana cherry
+data data data data data data data data data data data data
+compression compression compression compression compression
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+qui officia deserunt mollit anim id est laborum.
+
+Final check for the algorithm:
+1. Does the space character ' ' have the shortest code? (It should).
+2. Does the letter 'e' (the most common English letter) have a short code?
+3. Are symbols like '^' or '~' at the very bottom of your tree with long codes?
+
+The binary tree constructed by this algorithm is called a Huffman tree.
+It is a binary tree where all the symbols are at the leaf nodes.
+To build the tree, we start with a forest of trees, each consisting of a single node.
+We then repeatedly take the two trees with the lowest weights and merge them into
+a new tree whose weight is the sum of the weights of the two trees.
+This continues until only one tree remains.
+
+END OF TEST FILE.

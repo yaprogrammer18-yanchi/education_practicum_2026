@@ -98,7 +98,7 @@ void treeFree(HuffmanTree* tree)
 
 bool isEmpty(HuffmanTree* tree)
 {
-    return tree->root;
+    return tree == NULL || tree->root == NULL;
 }
 
 HuffNode* getRoot(HuffmanTree* tree)
@@ -132,7 +132,7 @@ void increaseFrequencyInNode(HuffNode* node)
     node->frequency++;
 }
 
-// --- обход дерева - формирование таблицы сивол - длина - канонический код
+// --- обход дерева - формирование таблицы символ - длина - канонический код
 
 typedef struct Cell {
     unsigned char symbol;
@@ -283,9 +283,10 @@ void freeCellsArray(Cell** cells, size_t count)
     free(cells);
 }
 
-Cell* getCellFromArray(Cell** arr, char ch, size_t count)
+Cell* getCellFromArray(Cell** arr, unsigned char ch, size_t count)
 {
-    // проверки
+    if (!arr)
+        return NULL;
     for (size_t i = 0; i < count; i++) {
         if (cellGetSymbol(arr[i]) == ch) {
             return arr[i];

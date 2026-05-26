@@ -18,6 +18,8 @@ HuffNode* getLeft(const HuffNode* node);
 HuffNode* getRight(const HuffNode* node);
 void extendCodeLength(HuffNode* node);
 void increaseFrequencyInNode(HuffNode* node);
+void treeSetRoot(HuffmanTree* tree, HuffNode* root);
+void addLeftAndRight(HuffNode* root, HuffNode* node1, HuffNode* node2);
 
 // ---------- построение таблицы символ - длина кода ----------
 
