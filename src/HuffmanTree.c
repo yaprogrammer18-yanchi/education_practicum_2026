@@ -265,6 +265,7 @@ Cell* getCellFromArray(Cell** arr, unsigned char ch, size_t count)
 }
 
 Cell* getCellWithCode(Cell** arr, uint64_t code, unsigned char length, size_t count)
+
 {
     // проверки
     for (size_t i = 0; i < count; i++) {
