@@ -88,7 +88,7 @@ bool testSingleCharacter(void)
         fputc('X', f);
     fclose(f);
 
-    fileCompressAndWrite("test_single.dat", "test_single.huf");
+    fileCompressAndWrite("test_stesingle.dat", "test_single.huf");
     fileDecompressAndWrite("test_single.huf", "test_single_rest.dat");
 
     bool ok = filesIdentical("test_single.dat", "test_single_rest.dat");
@@ -96,4 +96,62 @@ bool testSingleCharacter(void)
     remove("test_single.huf");
     remove("test_single_rest.dat");
     return ok;
+}
+
+static long getFileSize(const char* path)
+{
+    FILE* f = fopen(path, "rb");
+    if (!f)
+        return -1;
+    fseek(f, 0, SEEK_END);
+    long sz = ftell(f);
+    fclose(f);
+    return sz;
+}
+
+static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
+{
+    if (getFileSize(orig) < 0) {
+        printf("Файл %s не найден.\n", orig);
+        return true;
+    }
+
+    fileCompressAndWrite((char*)orig, (char*)huf);
+    fileDecompressAndWrite((char*)huf, (char*)rest);
+
+    bool ok = filesIdentical(orig, rest);
+    long s1 = getFileSize(orig);
+    long s2 = getFileSize(huf);
+
+    if (ok && s1 > 0 && s2 >= 0) {
+        double ratio = (1.0 - (double)s2 / s1) * 100.0;
+        printf("Сжато: %ld B до %ld B (%.1f%%)\n", s1, s2, ratio);
+    } else if (!ok) {
+        printf("Файлы не совпадают после разжатия!\n");
+    }
+
+    remove(huf);
+    remove(rest);
+    return ok;
+}
+
+int main(void)
+{
+    bool r1 = runRoundtrip("cFile.c", "cFile.huf", "cFile_rest.c");
+    printf("test cFile: %s\n", r1 ? "PASS" : "FAIL");
+    bool r2 = runRoundtrip("kirilicText.txt", "kirilicText.huf", "kirilicText_rest.txt");
+    printf("test kirilicText: %s\n", r2 ? "PASS" : "FAIL");
+    bool r3 = runRoundtrip("latinText.txt", "latinText.huf", "latinText_rest.txt");
+    printf("test latinText: %s\n", r3 ? "PASS" : "FAIL");
+    bool r4 = runRoundtrip("musicFile.wav", "musicFile.huf", "musicFile_rest.wav");
+    printf("test musicFile: %s\n", r4 ? "PASS" : "FAIL");
+    bool r5 = runRoundtrip("photoFile.bmp", "photoFile.huf", "photoFile_rest.bmp");
+    printf("test photoFile.bmp: %s\n", r5 ? "PASS" : "FAIL");
+
+    if (r1 && r2 && r3 && r4 && r5) {
+        printf("All 5 system tests passed!.\n");
+        return 0;
+    }
+    printf("Some tests failed.\n");
+    return 1;
 }

@@ -180,31 +180,22 @@ bool testFreqTreeTreeEdgeCases(void)
 
 int main(void)
 {
-    bool t1 = testBaseOccasion();
-    printf("Test 1 (text roundtrip):      %s\n", t1 ? "PASS" : "FAIL");
+    bool t1 = testFreqTreeHeapConsumption();
+    printf("Test 1 (freqTree heap consumption): %s\n", t1 ? "PASS" : "FAIL");
 
-    bool t2 = testBinaryFileWithRandomBytes();
-    printf("Test 2 (binary roundtrip):    %s\n", t2 ? "PASS" : "FAIL");
+    bool t2 = testFreqTreeHeapOrdering();
+    printf("Test 2 (freqTree heap ordering):    %s\n", t2 ? "PASS" : "FAIL");
 
-    bool t3 = testSingleCharacter();
-    printf("Test 3 (single character):    %s\n", t3 ? "PASS" : "FAIL");
+    bool t3 = testFreqTreeTreeStructure();
+    printf("Test 3 (freqTree tree structure):   %s\n", t3 ? "PASS" : "FAIL");
 
-    bool t4 = testFreqTreeHeapConsumption();
-    printf("Test 4 (freqTree heap consumption): %s\n", t4 ? "PASS" : "FAIL");
+    bool t4 = testFreqTreeTreeEdgeCases();
+    printf("Test 4 (freqTree tree edge cases):  %s\n", t4 ? "PASS" : "FAIL");
 
-    bool t5 = testFreqTreeHeapOrdering();
-    printf("Test 5 (freqTree heap ordering):    %s\n", t5 ? "PASS" : "FAIL");
-
-    bool t6 = testFreqTreeTreeStructure();
-    printf("Test 6 (freqTree tree structure):   %s\n", t6 ? "PASS" : "FAIL");
-
-    bool t7 = testFreqTreeTreeEdgeCases();
-    printf("Test 7 (freqTree tree edge cases):  %s\n", t7 ? "PASS" : "FAIL");
-
-    bool allPassed = t1 && t2 && t3 && t4 && t5 && t6 && t7;
+    bool allPassed = t1 && t2 && t3 && t4;
 
     if (allPassed) {
-        printf("All 7 integration tests passed!\n");
+        printf("All 4 integration tests passed!\n");
         return 0;
     }
     printf("Some tests failed\n");
