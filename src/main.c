@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
         switch (opt) {
         case 'c':
         case 'd':
-            mode = opt;
+            mode = (char)opt;
             break;
         case 'h':
             printUsage(argv[0]);

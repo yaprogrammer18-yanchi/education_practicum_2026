@@ -31,14 +31,6 @@ static void freeTreeRecursion(HuffNode* node)
     free(node);
 }
 
-static void extendCodeLength(HuffNode* node)
-{
-    if (node == NULL) {
-        return;
-    }
-    node->codelength++;
-}
-
 HuffmanTree* treeCreate(void)
 {
     HuffmanTree* newTree = malloc(sizeof(HuffmanTree));

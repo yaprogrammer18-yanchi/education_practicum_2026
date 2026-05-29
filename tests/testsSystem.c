@@ -124,7 +124,7 @@ static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
     long s2 = getFileSize(huf);
 
     if (ok && s1 > 0 && s2 >= 0) {
-        double ratio = (1.0 - (double)s2 / s1) * 100.0;
+        double ratio = (1.0 - (double)s2 / (double)s1) * 100.0;
         printf("Сжато: %ld B до %ld B (%.1f%%)\n", s1, s2, ratio);
     } else if (!ok) {
         printf("Файлы не совпадают после разжатия!\n");

@@ -26,8 +26,8 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
 
     // запись: таблица символ-длина 2 байта - 1 строчка таблицы
     for (uint32_t i = 0; i < quantityOfSymbols; i++) {
-        char s = cellGetSymbol(codeTable[i]);
-        char l = cellGetLength(codeTable[i]);
+        unsigned char s = cellGetSymbol(codeTable[i]);
+        unsigned char l = cellGetLength(codeTable[i]);
         fwrite(&s, sizeof(char), 1, outFile);
         fwrite(&l, sizeof(char), 1, outFile);
     }
@@ -44,7 +44,7 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
 
         unsigned char byte = (unsigned char)ch;
 
-        Cell* cell = getCellFromArray(codeTable, byte, quantityOfSymbols);
+        Cell* cell = getCellFromArray(codeTable, (unsigned char)byte, quantityOfSymbols);
         if (cell == NULL) {
             break;
         }
