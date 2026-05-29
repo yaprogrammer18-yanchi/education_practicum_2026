@@ -55,6 +55,17 @@ static void siftDown(MinHeap* heap, size_t index)
     }
 }
 
+static bool heapResize(MinHeap* heap, size_t newCapacity)
+{
+    HuffNode** tmp = realloc(heap->data, newCapacity * sizeof(HuffNode*));
+    if (!tmp) {
+        return false;
+    }
+    heap->data = tmp;
+    heap->capacity = newCapacity;
+    return true;
+}
+
 MinHeap* heapCreate(size_t capacity)
 {
     MinHeap* heap = malloc(sizeof(MinHeap));
@@ -78,17 +89,6 @@ void heapFree(MinHeap* heap)
     }
     free(heap->data);
     free(heap);
-}
-
-static bool heapResize(MinHeap* heap, size_t newCapacity)
-{
-    HuffNode** tmp = realloc(heap->data, newCapacity * sizeof(HuffNode*));
-    if (!tmp) {
-        return false;
-    }
-    heap->data = tmp;
-    heap->capacity = newCapacity;
-    return true;
 }
 
 bool heapPush(MinHeap* heap, HuffNode* node)

@@ -15,7 +15,23 @@ typedef struct HuffmanTree {
     HuffNode* root;
 } HuffmanTree;
 
-void extendCodeLength(HuffNode* node)
+typedef struct Cell {
+    unsigned char symbol;
+    uint64_t code;
+    unsigned char length;
+} Cell;
+
+static void freeTreeRecursion(HuffNode* node)
+{
+    if (node == NULL) {
+        return;
+    }
+    freeTreeRecursion(node->left);
+    freeTreeRecursion(node->right);
+    free(node);
+}
+
+static void extendCodeLength(HuffNode* node)
 {
     if (node == NULL) {
         return;
@@ -60,6 +76,7 @@ unsigned long getFrequency(HuffNode* node)
     }
     return node->frequency;
 }
+
 unsigned char getSymbol(HuffNode* node)
 {
     if (node == NULL) {
@@ -75,16 +92,6 @@ void addLeftAndRight(HuffNode* root, HuffNode* node1, HuffNode* node2)
     }
     root->left = node1;
     root->right = node2;
-}
-
-void freeTreeRecursion(HuffNode* node)
-{
-    if (node == NULL) {
-        return;
-    }
-    freeTreeRecursion(node->left);
-    freeTreeRecursion(node->right);
-    free(node);
 }
 
 void treeFree(HuffmanTree* tree)
@@ -108,6 +115,7 @@ HuffNode* getRoot(HuffmanTree* tree)
     }
     return tree->root;
 }
+
 HuffNode* getLeft(const HuffNode* node)
 {
     if (node == NULL) {
@@ -131,14 +139,6 @@ void increaseFrequencyInNode(HuffNode* node)
     }
     node->frequency++;
 }
-
-// --- обход дерева - формирование таблицы символ - длина - канонический код
-
-typedef struct Cell {
-    unsigned char symbol;
-    uint64_t code;
-    unsigned char length;
-} Cell;
 
 Cell* createCell(unsigned char symbol, uint64_t code, unsigned char length)
 {
@@ -174,44 +174,21 @@ unsigned char cellGetLength(Cell* cell)
  * индекс массива, в который будут класться структуры ячеек
  * указатель на массив указателей на cells
  */
-void inorderRecursion(HuffNode* node, size_t* path, size_t* index, Cell** arrWithCells)
+static void collectLeafLengths(HuffNode* node, unsigned char depth, size_t* index, Cell** arr)
 {
-    if (node == NULL) {
+    if (!node)
         return;
-    }
-    (*path)++;
-    inorderRecursion(node->left, path, index, arrWithCells);
-    (*path)--;
-
-    if (node != NULL && node->left == NULL && node->right == NULL) {
-        Cell* newCell = calloc(1, sizeof(Cell));
-        if (newCell == NULL) {
-            return;
-        }
-        newCell->symbol = node->symbol;
-        newCell->length = *path;
-        arrWithCells[*index] = newCell;
+    if (!node->left && !node->right) {
+        unsigned char len = (depth == 0) ? 1 : depth;
+        arr[*index] = createCell(node->symbol, 0, len);
         (*index)++;
         return;
     }
-    (*path)++;
-    inorderRecursion(node->right, path, index, arrWithCells);
-    (*path)--;
-    if (node != NULL && node->left == NULL && node->right == NULL) {
-        Cell* newCell = calloc(1, sizeof(Cell));
-        if (newCell == NULL) {
-            return;
-        }
-        newCell->symbol = node->symbol;
-        newCell->length = *path;
-        arrWithCells[*index] = newCell;
-        (*path)--;
-        (*index)++;
-        return;
-    }
+    collectLeafLengths(node->left, depth + 1, index, arr);
+    collectLeafLengths(node->right, depth + 1, index, arr);
 }
 
-int compareCells(const void* a, const void* b)
+static int compareCells(const void* a, const void* b)
 {
     if (a == NULL || b == NULL) {
         return 0;
@@ -233,15 +210,15 @@ int compareCells(const void* a, const void* b)
 // возвращает указатель на отсортированный по убыванию массив с указателями на ячейки
 Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols)
 {
-    size_t path = 0;
-    size_t index = 0;
-
-    Cell** arrWithCells = calloc(quantityOfSymbols, sizeof(Cell*));
-    if (arrWithCells != NULL) {
-        inorderRecursion(tree->root, &path, &index, arrWithCells);
-    } else {
+    if (!tree || !tree->root)
         return NULL;
-    }
+
+    size_t index = 0;
+    Cell** arrWithCells = calloc(quantityOfSymbols, sizeof(Cell*));
+    if (!arrWithCells)
+        return NULL;
+
+    collectLeafLengths(tree->root, 0, &index, arrWithCells);
     qsort(arrWithCells, quantityOfSymbols, sizeof(Cell*), compareCells);
     return arrWithCells;
 }
@@ -250,7 +227,7 @@ Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols)
 // первый сивол = 0 * длину кода
 // берем пред код + 1 добавляем нули справа до нужной длины
 // пока все не обойдем
-
+// функция построения
 void generateCanonicalCodes(Cell** cells, size_t quantityOdCells)
 {
     uint64_t buffer = 0;

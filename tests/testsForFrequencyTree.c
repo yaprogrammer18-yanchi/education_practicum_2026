@@ -3,6 +3,7 @@
 #include "../src/minHeap.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 bool testFrequencyTreeNullHeap(void)
 {
@@ -140,17 +141,69 @@ bool testFrequencyTreeSumFrequency(void)
     return true;
 }
 
+bool testIncreaseFrequency(void)
+{
+    MinHeap* heap = heapCreate(4);
+    if (!heap) {
+        fprintf(stderr, "heapCreate failed\n");
+        return false;
+    }
+
+    HuffNode* node1 = nodeCreate('A', 5);
+    HuffNode* node2 = nodeCreate('B', 3);
+
+    if (!node1 || !node2) {
+        fprintf(stderr, "nodeCreate failed\n");
+        if (node1)
+            free(node1);
+        if (node2)
+            free(node2);
+        heapFree(heap);
+        return false;
+    }
+
+    heapPush(heap, node1);
+    heapPush(heap, node2);
+
+    increaseFrequency(heap, node1);
+
+    HuffNode* min1 = heapPop(heap);
+    if (!min1 || getSymbol(min1) != 'B' || getFrequency(min1) != 3) {
+        fprintf(stderr, "ERROR: First pop should be 'B' (freq 3)\n");
+        heapFree(heap);
+        return false;
+    }
+
+    HuffNode* min2 = heapPop(heap);
+    if (!min2 || getSymbol(min2) != 'A' || getFrequency(min2) != 6) {
+        fprintf(stderr, "ERROR: Second pop should be 'A' (freq 6)\n");
+        if (min1)
+            free(min1);
+        heapFree(heap);
+        return false;
+    }
+
+    free(min1);
+    free(min2);
+
+    heapFree(heap);
+
+    return true;
+}
+
 int testsForFrequencyTree(void)
 {
     bool okNull = testFrequencyTreeNullHeap();
     bool okEmpty = testFrequencyTreeEmptyHeap();
     bool okSingle = testFrequencyTreeSingleNode();
     bool okSum = testFrequencyTreeSumFrequency();
+    bool okFreq = testIncreaseFrequency();
 
     printf("TestFrequencyTreeNullHeap:   %s\n", okNull ? "PASS" : "FAIL");
     printf("TestFrequencyTreeEmptyHeap:  %s\n", okEmpty ? "PASS" : "FAIL");
     printf("TestFrequencyTreeSingleNode: %s\n", okSingle ? "PASS" : "FAIL");
     printf("TestFrequencyTreeSumFrequency: %s\n", okSum ? "PASS" : "FAIL");
+    printf("TestFrequencyIncreaseFrequency: %s\n", okFreq ? "PASS" : "FAIL");
 
     if (okNull && okEmpty && okSingle && okSum) {
         printf("All frequencyTreeCreate tests passed!\n");
