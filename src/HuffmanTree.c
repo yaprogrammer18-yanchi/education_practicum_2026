@@ -267,8 +267,15 @@ Cell* getCellFromArray(Cell** arr, unsigned char ch, size_t count)
 Cell* getCellWithCode(Cell** arr, uint64_t code, unsigned char length, size_t count)
 
 {
-    // проверки
+    if (arr == NULL || count == 0) {
+        return NULL;
+    }
+
     for (size_t i = 0; i < count; i++) {
+        if (arr[i] == NULL) {
+            continue;
+        }
+
         if (cellGetCode(arr[i]) == code && (length == cellGetLength(arr[i]))) {
             return arr[i];
         }

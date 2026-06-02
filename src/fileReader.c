@@ -6,10 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// 1. размер таблицы - int то есть 4 байта
-// 2. Далее идут символ (1 байт) - его длина (1 байт) подряд
-// 3. начинаем цикл в котором последовательно заполняем буферные 8 бит и пишем в файл
-
 void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quantityOfSymbols)
 {
     FILE* textFile = fopen(text, "rb");
