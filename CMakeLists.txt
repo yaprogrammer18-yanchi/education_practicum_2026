@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(Huffman_Archivator C)
-add_compile_options(-Wall -Wextra -pedantic -fsanitize=address -g)
+add_compile_options(-Wall -Wextra -pedantic -fsanitize=address -g -O2)
 add_link_options(-fsanitize=address)
 
 # библиотеки
@@ -22,7 +22,7 @@ add_executable(testsHeap tests/testsForHeap.c)
 add_executable(testsFT tests/testsForFrequencyTree.c)
 add_executable(testsHuffmanTree tests/testsForHuffmanTree.c)
 add_executable(integrationTests tests/testsIntergational.c)
-add_executable(systemTests tests/testsSystem.c)
+add_executable(systemTests tests/testsIntegrationalAndSystem.c)
 
 target_link_libraries(testsHeap PRIVATE HuffmanTree minHeap)
 target_link_libraries(testsFT PRIVATE HuffmanTree minHeap frequencyTree)
