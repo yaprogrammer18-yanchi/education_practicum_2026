@@ -118,8 +118,8 @@ bool testCellLookups(void)
 {
     size_t count = 2;
     Cell** cells = calloc(count, sizeof(Cell*));
-    cells[0] = createCell('X', 0b0, 1);
-    cells[1] = createCell('Y', 0b10, 2);
+    cells[0] = createCell('X', 0, 1);
+    cells[1] = createCell('Y', 2, 2);
 
     bool ok = true;
     Cell* found = getCellFromArray(cells, 'Y', count);
@@ -128,7 +128,7 @@ bool testCellLookups(void)
         ok = false;
     }
 
-    found = getCellWithCode(cells, 0b10, 2, count);
+    found = getCellWithCode(cells, 2, 2, count);
     if (!found || cellGetSymbol(found) != 'Y') {
         fprintf(stderr, "ERROR: getCellWithCode failed\n");
         ok = false;
@@ -138,7 +138,7 @@ bool testCellLookups(void)
         fprintf(stderr, "ERROR: should return NULL for missing symbol\n");
         ok = false;
     }
-    if (getCellWithCode(cells, 0b111, 3, count) != NULL) {
+    if (getCellWithCode(cells, 3, 3, count) != NULL) {
         fprintf(stderr, "ERROR: should return NULL for missing code\n");
         ok = false;
     }

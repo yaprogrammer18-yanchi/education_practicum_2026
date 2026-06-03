@@ -64,9 +64,9 @@ bool testBaseOccasion(void)
 bool testBinaryFileWithRandomBytes(void)
 {
     FILE* f = fopen("test_bin.dat", "wb");
-    srand(42);
+    srand(42); // NOLINT(cert-msc50-cpp)
     for (int i = 0; i < 50000; i++)
-        fputc(rand() % 256, f);
+        fputc(rand() % 256, f); // NOLINT(cert-msc50-cpp)
     fclose(f);
 
     fileCompressAndWrite("test_bin.dat", "test_bin.huf");

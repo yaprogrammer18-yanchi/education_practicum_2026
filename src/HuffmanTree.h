@@ -38,5 +38,5 @@ unsigned char cellGetSymbol(Cell* cell);
 uint64_t cellGetCode(Cell* cell);
 void freeCellsArray(Cell** cells, size_t count);
 
-Cell* getCellFromArray(Cell** arr, char ch, size_t count);
+Cell* getCellFromArray(Cell** arr, unsigned char ch, size_t count);
 Cell* getCellWithCode(Cell** arr, uint64_t code, unsigned char length, size_t count);
