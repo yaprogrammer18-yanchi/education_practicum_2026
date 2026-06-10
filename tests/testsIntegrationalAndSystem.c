@@ -109,6 +109,7 @@ static long getFileSize(const char* path)
     return sz;
 }
 
+// функция принимает файл, сжимает, разжимает, смотрит, совадают ли исходный и обработанный файл
 static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
 {
     if (getFileSize(orig) < 0) {
@@ -127,9 +128,8 @@ static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
         double ratio = (1.0 - (double)s2 / (double)s1) * 100.0;
         printf("Сжато: %ld B до %ld B (%.1f%%)\n", s1, s2, ratio);
     } else if (!ok) {
-        printf("Файлы не совпадают после разжатия!\n");
+        printf("Files are not the same after decompression!\n");
     }
-
     remove(huf);
     remove(rest);
     return ok;
@@ -137,15 +137,15 @@ static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
 
 int main(void)
 {
-    bool r1 = runRoundtrip("cFile.c", "cFile.huf", "cFile_rest.c");
+    bool r1 = runRoundtrip("tests/testFiles/cFile.c", "cFile.huf", "cFile_rest.c");
     printf("test cFile: %s\n", r1 ? "PASS" : "FAIL");
-    bool r2 = runRoundtrip("kirilicText.txt", "kirilicText.huf", "kirilicText_rest.txt");
+    bool r2 = runRoundtrip("tests/testFiles/kirilicText.txt", "kirilicText.huf", "kirilicText_rest.txt");
     printf("test kirilicText: %s\n", r2 ? "PASS" : "FAIL");
-    bool r3 = runRoundtrip("latinText.txt", "latinText.huf", "latinText_rest.txt");
+    bool r3 = runRoundtrip("tests/testFiles/latinText.txt", "latinText.huf", "latinText_rest.txt");
     printf("test latinText: %s\n", r3 ? "PASS" : "FAIL");
-    bool r4 = runRoundtrip("musicFile.wav", "musicFile.huf", "musicFile_rest.wav");
+    bool r4 = runRoundtrip("tests/testFiles/musicFile.wav", "musicFile.huf", "musicFile_rest.wav");
     printf("test musicFile: %s\n", r4 ? "PASS" : "FAIL");
-    bool r5 = runRoundtrip("photoFile.bmp", "photoFile.huf", "photoFile_rest.bmp");
+    bool r5 = runRoundtrip("tests/testFiles/photoFile.bmp", "photoFile.huf", "photoFile_rest.bmp");
     printf("test photoFile.bmp: %s\n", r5 ? "PASS" : "FAIL");
 
     if (r1 && r2 && r3 && r4 && r5) {

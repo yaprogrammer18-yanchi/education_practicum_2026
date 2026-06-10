@@ -56,9 +56,9 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
             uint8_t bit = (code >> i) & 1;
             buffer = (buffer << 1) | bit;
             usedBits++;
+            encodedSize++;
             if (usedBits == 8) {
                 fwrite(&buffer, sizeof(uint8_t), 1, outFile);
-                encodedSize++;
                 buffer = 0;
                 usedBits = 0;
             }
@@ -67,7 +67,7 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
     if (usedBits > 0) {
         buffer = buffer << (8 - usedBits);
         fwrite(&buffer, sizeof(uint8_t), 1, outFile);
-        encodedSize++;
+        // encodedSize++;
     }
 
     fseek(outFile, sizePos, SEEK_SET);
@@ -195,17 +195,24 @@ void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
 
     uint32_t encodedSize = 0;
     fread(&encodedSize, sizeof(uint32_t), 1, inFile);
-
+    uint32_t bytesToRead = (encodedSize + 7) / 8;
     uint64_t bufferForSymbol = 0;
     unsigned char usedBits = 0;
     unsigned char byte = 0;
     size_t bytesRead = 0;
+    uint32_t bitsProcessed = 0;
 
-    while (bytesRead < encodedSize && fread(&byte, 1, 1, inFile) == 1) {
+    while (bytesRead < bytesToRead && fread(&byte, 1, 1, inFile) == 1) {
         for (int i = 7; i >= 0; i--) {
+
+            if (bitsProcessed >= encodedSize) {
+                break;
+            }
+
             int bit = (byte >> i) & 1;
             bufferForSymbol = (bufferForSymbol << 1) | bit;
             usedBits++;
+            bitsProcessed++;
 
             Cell* cellWithCode = getCellWithCode(arrWithCells, bufferForSymbol, usedBits, quantityOfSymbols);
             if (cellWithCode != NULL) {
