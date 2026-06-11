@@ -5,11 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/*
- * функция построения дерева частот
- * на вход принимает минимальную кучу с элементами (символ - частота) в нужном порядке
- * возвращает указатель на созданное дерево
- */
 HuffmanTree* frequencyTreeCreate(MinHeap* heap)
 {
     if (heap == NULL) {
