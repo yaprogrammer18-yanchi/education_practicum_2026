@@ -18,6 +18,8 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
         printf("file not found!\n");
         return;
     }
+
+    // запись количества уникальных символов
     fwrite(&quantityOfSymbols, sizeof(uint32_t), 1, outFile);
 
     // запись: таблица символ-длина 2 байта - 1 строчка таблицы
@@ -27,7 +29,7 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
         fwrite(&s, sizeof(char), 1, outFile);
         fwrite(&l, sizeof(char), 1, outFile);
     }
-
+    // предварительная запись нулевого размера в заголовок
     long sizePos = ftell(outFile);
     uint32_t encodedSize = 0;
     fwrite(&encodedSize, sizeof(uint32_t), 1, outFile);
@@ -36,22 +38,19 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
     char usedBits = 0;
     int ch = 0;
 
+    // проход по тексту, сопоставление символу его кода, заполнение буфера на 8 бит, запись буфера в файл
     while ((ch = fgetc(textFile)) != EOF) {
 
         unsigned char byte = (unsigned char)ch;
-
         Cell* cell = getCellFromArray(codeTable, (unsigned char)byte, quantityOfSymbols);
         if (cell == NULL) {
             break;
         }
-
         uint64_t code = cellGetCode(cell);
         int codeLength = cellGetLength(cell);
-
         if (codeLength == 0) {
             break;
         }
-
         for (int i = codeLength - 1; i >= 0; i--) {
             uint8_t bit = (code >> i) & 1;
             buffer = (buffer << 1) | bit;
@@ -64,15 +63,14 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
             }
         }
     }
+    // добавление паддинга, если последний байт получился неполным
     if (usedBits > 0) {
         buffer = buffer << (8 - usedBits);
         fwrite(&buffer, sizeof(uint8_t), 1, outFile);
-        // encodedSize++;
     }
-
+    // запись размера сжатого файла в битах
     fseek(outFile, sizePos, SEEK_SET);
     fwrite(&encodedSize, sizeof(uint32_t), 1, outFile);
-
     fclose(textFile);
     fclose(outFile);
 }
@@ -91,11 +89,9 @@ void fileCompressAndWrite(char* inputFilepath, char* outputFilepath)
         return;
     }
 
-    // побайтовый проход по файлу и построение кучи
-
     int ch = 0;
     size_t quantityOfSymbols = 0;
-
+    // побайтовый проход по файлу и построение кучи
     while ((ch = fgetc(file)) != EOF) {
 
         unsigned char byte = (unsigned char)ch;
@@ -117,16 +113,14 @@ void fileCompressAndWrite(char* inputFilepath, char* outputFilepath)
             increaseFrequency(heap, currentNode);
         }
     }
-
     fclose(file);
-
-    // ------------------
 
     if (quantityOfSymbols == 0) {
         printf("Файл пуст\n");
         heapFree(heap);
         return;
     }
+
     HuffmanTree* tree = frequencyTreeCreate(heap);
     Cell** cellArr = makeCells(tree, quantityOfSymbols);
     generateCanonicalCodes(cellArr, quantityOfSymbols);
@@ -140,15 +134,15 @@ void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
 {
     FILE* inFile = fopen(compressedFilepath, "rb");
     if (!inFile) {
-        printf("Cannot open compressed file\n");
+        printf("Невозможно открыть сжатый файл\n");
         return;
     }
     FILE* outFile = fopen(outputFile, "wb");
     if (!outFile) {
-        printf("Cannot open outputFile\n");
+        printf("Невозможно открыть файл для записи\n");
         return;
     }
-    // Читаем количество символов
+
     uint32_t quantityOfSymbols;
     if (fread(&quantityOfSymbols, sizeof(uint32_t), 1, inFile) != 1) {
         fclose(inFile);
@@ -156,7 +150,6 @@ void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
         return;
     }
 
-    // Читаем таблицу символов и формируем массив указателей на ячейки таблицы
     Cell** arrWithCells = calloc(quantityOfSymbols, sizeof(Cell*));
     if (arrWithCells == NULL) {
         fclose(inFile);
@@ -208,7 +201,6 @@ void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
             if (bitsProcessed >= encodedSize) {
                 break;
             }
-
             int bit = (byte >> i) & 1;
             bufferForSymbol = (bufferForSymbol << 1) | bit;
             usedBits++;
