@@ -197,9 +197,6 @@ static int compareCells(const void* a, const void* b)
     }
 }
 
-// функция обхода дерева и получения длины кода для символов
-// принимает на вход дерево и его размер
-// возвращает указатель на отсортированный по убыванию массив с указателями на ячейки
 Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols)
 {
     if (!tree || !tree->root)
@@ -216,10 +213,8 @@ Cell** makeCells(HuffmanTree* tree, size_t quantityOfSymbols)
 }
 
 // алгоритм построения канонических кодов:
-// первый сивол = 0 * длину кода
-// берем пред код + 1 добавляем нули справа до нужной длины
-// пока все не обойдем
-// функция построения
+// код первого символа = 0 * длину его кода
+// предыдущий код + 1 добавляем нули справа до нужной длины
 void generateCanonicalCodes(Cell** cells, size_t quantityOdCells)
 {
     uint64_t buffer = 0;
