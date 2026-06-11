@@ -6,7 +6,7 @@
 
 void printUsage(const char* prog)
 {
-    fprintf(stderr, "Usage: %s [-c|-d] <input_file> <output_file>\n", prog);
+    fprintf(stderr, "Использование: %s [-c|-d] <входной_файл> <выходной_файл>\n", prog);
     fprintf(stderr, "  -c    Сжать входной файл\n");
     fprintf(stderr, "  -d    Разжать входной файл\n");
     fprintf(stderr, "  -h    Показать сообщение с инструкцией\n");
