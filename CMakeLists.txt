@@ -5,7 +5,7 @@ add_link_options(-fsanitize=address)
 
 # библиотеки
 
-add_library(HuffmanTree src/HuffmanTree.c)
+add_library(HuffmanTree src/huffmanTree.c)
 add_library(minHeap     src/minHeap.c)
 add_library(frequencyTree src/frequencyTree.c)
 add_library(fileReader src/fileReader.c)
