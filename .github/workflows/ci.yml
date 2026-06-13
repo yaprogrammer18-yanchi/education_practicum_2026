@@ -1,0 +1,35 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build-type: [Release, Debug]
+        sanitizer: [none, address]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake clang-tidy
+      
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
+            -DCMAKE_C_COMPILER=gcc \
+            ${{ matrix.sanitizer == 'address' && '-DCMAKE_C_FLAGS=-fsanitize=address' || '' }}
+      
+      - name: Build
+        run: cmake --build build -j$(nproc)
+      
+      - name: Run tests
+        run: |
+          cd build
+          ctest --output-on-failure
+      
+      - name: Run clang-tidy
+        run: |
+          find src tests -name "*.c" -exec clang-tidy {} -- -Isrc \;
