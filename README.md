@@ -35,8 +35,11 @@ src/
 tests/
 
     testMinHeap/          Модульные тесты кучи: проверка инвариантов, операций push/pop
+    
     testHuffmanTree/      Тесты дерева: канонические коды, поиск по таблице, обход
+    
     testFrequencyTree/    Интеграционные тесты: взаимодействие кучи и построения дерева
+    
     testsIntegrationalAndSystem.c  Системные roundtrip-тесты на текстовых и бинарных файлах
 ```
 
