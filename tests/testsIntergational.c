@@ -1,6 +1,6 @@
-#include "../src/HuffmanTree.h"
 #include "../src/fileReader.h"
 #include "../src/frequencyTree.h"
+#include "../src/huffmanTree.h"
 #include "../src/minHeap.h"
 #include <stdbool.h>
 #include <stdio.h>
