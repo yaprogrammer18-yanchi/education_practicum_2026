@@ -1,3 +1,13 @@
+<p align="center">
+  <a href="https://github.com/yaprogrammer18-yanchi/education_practicum_2026/actions/workflows/ci.yml">
+    <img src="https://github.com/yaprogrammer18-yanchi/education_practicum_2026/actions/workflows/ci.yml/badge.svg" alt="CI Status">
+  </a>
+  <a href="https://github.com/yaprogrammer18-yanchi/education_practicum_2026/actions/workflows/build-and-lint.yml">
+    <img src="https://github.com/yaprogrammer18-yanchi/education_practicum_2026/actions/workflows/build-and-lint.yml/badge.svg" alt="Lint Status">
+  </a>
+</p>
+
+
 # Архиватор на базе Алгоритма Хаффмана.
 Учебная практика СПбГУ | 1 курс, 2 семестр
 
