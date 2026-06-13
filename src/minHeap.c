@@ -1,4 +1,4 @@
-#include "HuffmanTree.h"
+#include "huffmanTree.h"
 #include <stdlib.h>
 
 typedef struct MinHeap {

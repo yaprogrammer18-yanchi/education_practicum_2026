@@ -1,5 +1,5 @@
 #pragma once
-#include "HuffmanTree.h"
+#include "huffmanTree.h"
 #include <stdbool.h>
 #include <stdio.h>
 

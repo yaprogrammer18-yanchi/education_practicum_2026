@@ -128,7 +128,7 @@ static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
         double ratio = (1.0 - (double)s2 / (double)s1) * 100.0;
         printf("Сжато: %ld B до %ld B (%.1f%%)\n", s1, s2, ratio);
     } else if (!ok) {
-        printf("Files are not the same after decompression!\n");
+        printf("Файлы не совпадают после разжатия!\n");
     }
     remove(huf);
     remove(rest);
@@ -138,20 +138,20 @@ static bool runRoundtrip(const char* orig, const char* huf, const char* rest)
 int main(void)
 {
     bool r1 = runRoundtrip("tests/testFiles/cFile.c", "cFile.huf", "cFile_rest.c");
-    printf("test cFile: %s\n", r1 ? "PASS" : "FAIL");
+    printf("cFile: %s\n", r1 ? "Успешно" : "Ошибка");
     bool r2 = runRoundtrip("tests/testFiles/kirilicText.txt", "kirilicText.huf", "kirilicText_rest.txt");
-    printf("test kirilicText: %s\n", r2 ? "PASS" : "FAIL");
+    printf("kirilicText: %s\n", r2 ? "Успешно" : "Ошибка");
     bool r3 = runRoundtrip("tests/testFiles/latinText.txt", "latinText.huf", "latinText_rest.txt");
-    printf("test latinText: %s\n", r3 ? "PASS" : "FAIL");
+    printf("latinText: %s\n", r3 ? "Успешно" : "Ошибка");
     bool r4 = runRoundtrip("tests/testFiles/musicFile.wav", "musicFile.huf", "musicFile_rest.wav");
-    printf("test musicFile: %s\n", r4 ? "PASS" : "FAIL");
+    printf("musicFile: %s\n", r4 ? "Успешно" : "Ошибка");
     bool r5 = runRoundtrip("tests/testFiles/photoFile.bmp", "photoFile.huf", "photoFile_rest.bmp");
-    printf("test photoFile.bmp: %s\n", r5 ? "PASS" : "FAIL");
+    printf("photoFile.bmp: %s\n", r5 ? "Успешно" : "Ошибка");
 
     if (r1 && r2 && r3 && r4 && r5) {
-        printf("All 5 system tests passed!.\n");
+        printf("Все тесты пройдены!.\n");
         return 0;
     }
-    printf("Some tests failed.\n");
+    printf("Некоторые тесты провалились.\n");
     return 1;
 }

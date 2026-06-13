@@ -1,5 +1,5 @@
-#include "HuffmanTree.h"
 #include "frequencyTree.h"
+#include "huffmanTree.h"
 #include "minHeap.h"
 #include <stdbool.h>
 #include <stdio.h>

@@ -1,4 +1,4 @@
-#include "../src/HuffmanTree.h"
+#include "../src/huffmanTree.h"
 #include "../src/minHeap.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -120,10 +120,10 @@ int testsForMinHeap(void)
     bool okOrder = testHeapPopOrder();
 
     if (okEmpty && okPush && okOrder) {
-        printf("All heap tests passed!\n");
+        printf("Все тесты пройдены!\n");
         return 0;
     } else {
-        printf("Some heap tests FAILED\n");
+        printf("Некоторые тесты не пройдены\n");
         return 1;
     }
 }

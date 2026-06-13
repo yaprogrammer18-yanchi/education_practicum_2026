@@ -1,4 +1,4 @@
-#include "../src/HuffmanTree.h"
+#include "../src/huffmanTree.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
