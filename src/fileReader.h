@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026, Кальсина Яна Вячеславовна
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #pragma once
 #include "minHeap.h"
 

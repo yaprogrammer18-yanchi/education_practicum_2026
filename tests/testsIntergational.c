@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026, Кальсина Яна Вячеславовна
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #include "../src/fileReader.h"
 #include "../src/frequencyTree.h"
 #include "../src/huffmanTree.h"
