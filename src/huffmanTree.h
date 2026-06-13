@@ -96,3 +96,8 @@ Cell* getCellFromArray(Cell** arr, unsigned char ch, size_t count);
 // принимает массив, искомый код, длину и размер массива
 // возвращает указатель на найденную ячейку или NULL
 Cell* getCellWithCode(Cell** arr, uint64_t code, unsigned char length, size_t count);
+
+// функция построения дерева Хаффмана по таблице кодов
+// на вход принимает указатель на таблицу кодов и ее размер
+// возвращает ноду с нужным символом
+HuffNode* buildDecodeTree(Cell** cells, size_t count);

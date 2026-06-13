@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quantityOfSymbols)
+void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint16_t quantityOfSymbols)
 {
     FILE* textFile = fopen(text, "rb");
     if (textFile == NULL) {
@@ -20,10 +20,10 @@ void writeInFile(char* text, char* outFilepath, Cell** codeTable, uint32_t quant
     }
 
     // запись количества уникальных символов
-    fwrite(&quantityOfSymbols, sizeof(uint32_t), 1, outFile);
+    fwrite(&quantityOfSymbols, sizeof(uint16_t), 1, outFile);
 
     // запись: таблица символ-длина 2 байта - 1 строчка таблицы
-    for (uint32_t i = 0; i < quantityOfSymbols; i++) {
+    for (uint16_t i = 0; i < quantityOfSymbols; i++) {
         unsigned char s = cellGetSymbol(codeTable[i]);
         unsigned char l = cellGetLength(codeTable[i]);
         fwrite(&s, sizeof(char), 1, outFile);
@@ -124,7 +124,7 @@ void fileCompressAndWrite(char* inputFilepath, char* outputFilepath)
     HuffmanTree* tree = frequencyTreeCreate(heap);
     Cell** cellArr = makeCells(tree, quantityOfSymbols);
     generateCanonicalCodes(cellArr, quantityOfSymbols);
-    writeInFile(inputFilepath, outputFilepath, cellArr, (uint32_t)quantityOfSymbols);
+    writeInFile(inputFilepath, outputFilepath, cellArr, (uint16_t)quantityOfSymbols);
     heapFree(heap);
     treeFree(tree);
     freeCellsArray(cellArr, quantityOfSymbols);
@@ -143,8 +143,8 @@ void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
         return;
     }
 
-    uint32_t quantityOfSymbols;
-    if (fread(&quantityOfSymbols, sizeof(uint32_t), 1, inFile) != 1) {
+    uint16_t quantityOfSymbols;
+    if (fread(&quantityOfSymbols, sizeof(uint16_t), 1, inFile) != 1) {
         fclose(inFile);
         fclose(outFile);
         return;
@@ -185,37 +185,38 @@ void fileDecompressAndWrite(char* compressedFilepath, char* outputFile)
     }
 
     generateCanonicalCodes(arrWithCells, quantityOfSymbols);
-
     uint32_t encodedSize = 0;
     fread(&encodedSize, sizeof(uint32_t), 1, inFile);
+
+    HuffNode* decodeTree = buildDecodeTree(arrWithCells, quantityOfSymbols);
+    HuffNode* current = decodeTree;
+
     uint32_t bytesToRead = (encodedSize + 7) / 8;
-    uint64_t bufferForSymbol = 0;
-    unsigned char usedBits = 0;
     unsigned char byte = 0;
     size_t bytesRead = 0;
     uint32_t bitsProcessed = 0;
 
     while (bytesRead < bytesToRead && fread(&byte, 1, 1, inFile) == 1) {
         for (int i = 7; i >= 0; i--) {
-
-            if (bitsProcessed >= encodedSize) {
+            if (bitsProcessed >= encodedSize)
                 break;
-            }
+
             int bit = (byte >> i) & 1;
-            bufferForSymbol = (bufferForSymbol << 1) | bit;
-            usedBits++;
             bitsProcessed++;
 
-            Cell* cellWithCode = getCellWithCode(arrWithCells, bufferForSymbol, usedBits, quantityOfSymbols);
-            if (cellWithCode != NULL) {
-                unsigned char ch = cellGetSymbol(cellWithCode);
-                fwrite(&ch, sizeof(char), 1, outFile);
-                bufferForSymbol = 0;
-                usedBits = 0;
+            current = (bit == 0) ? getLeft(current) : getRight(current);
+
+            if (current && !getLeft(current) && !getRight(current)) {
+                unsigned char sym = getSymbol(current);
+                fwrite(&sym, 1, 1, outFile);
+                current = decodeTree;
             }
         }
         bytesRead++;
     }
+    HuffmanTree* tmpTree = treeCreate();
+    treeSetRoot(tmpTree, decodeTree);
+    treeFree(tmpTree);
     freeCellsArray(arrWithCells, quantityOfSymbols);
     fclose(inFile);
     fclose(outFile);

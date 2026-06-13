@@ -277,3 +277,36 @@ Cell* getCellWithCode(Cell** arr, uint64_t code, unsigned char length, size_t co
     }
     return NULL;
 }
+
+HuffNode* buildDecodeTree(Cell** cells, size_t count)
+{
+    if (count == 0)
+        return NULL;
+
+    HuffNode* root = nodeCreate(0, 0);
+
+    for (size_t i = 0; i < count; i++) {
+        HuffNode* curr = root;
+        uint64_t code = cellGetCode(cells[i]);
+        unsigned char len = cellGetLength(cells[i]);
+
+        for (int bit = len - 1; bit >= 0; bit--) {
+            int b = (code >> bit) & 1;
+            if (b == 0) {
+                if (!getLeft(curr)) {
+                    HuffNode* new = nodeCreate(0, 0);
+                    addLeftAndRight(curr, new, getLeft(curr));
+                }
+                curr = getLeft(curr);
+            } else {
+                if (!getRight(curr)) {
+                    HuffNode* new = nodeCreate(0, 0);
+                    addLeftAndRight(curr, getLeft(curr), new);
+                }
+                curr = getRight(curr);
+            }
+        }
+        curr->symbol = cellGetSymbol(cells[i]);
+    }
+    return root;
+}
