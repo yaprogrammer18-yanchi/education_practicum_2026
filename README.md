@@ -27,6 +27,7 @@ tests/
 ```
 
 ## Инструкция по сборке
+```
 git clone https://github.com/yaprogrammer18-yanchi/education_practicum_2026.git
 
 cd education_practicum_2026
@@ -40,9 +41,10 @@ cmake --build .
 ctest --output-on-failure
 
 ./main [аргументы]  - запуск исполняемого файла
+```
 
 ## Использование
-
+```
 Сжатие файла
 ./main -c <input.txt> <compressed.huf>
 
@@ -51,3 +53,4 @@ ctest --output-on-failure
 
 Справка
 ./main -h
+```
